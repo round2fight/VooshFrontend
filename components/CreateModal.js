@@ -68,7 +68,7 @@ const CreateTaskModal = ({ isOpen, onClose, onSubmit }) => {
               className="border border-gray-300 text-gray-700 p-2 rounded-lg w-full "
             >
               <option className="text-gray-700" value="0">
-                TODOD
+                TODO
               </option>
               <option className="text-gray-700" value="1">
                 IN PROGRESS

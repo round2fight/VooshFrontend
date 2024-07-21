@@ -3,7 +3,7 @@ import { useDrop } from "react-dnd";
 import { ItemTypes } from "../constants";
 import Card from "./Card";
 
-const List = ({ id, cards, moveCard, title }) => {
+const List = ({ id, cards, moveCard, title, setTarget }) => {
   const [, drop] = useDrop(() => ({
     accept: "CARD",
     drop: (item) => {
@@ -22,7 +22,7 @@ const List = ({ id, cards, moveCard, title }) => {
         className="list w-full min-h-[400px] flex flex-col items-center gap-3 border border-gray-400 p-2 m-1 bg-gray-200 rounded-lg "
       >
         {cards.map((card) => (
-          <Card key={card.uuid} card={card} />
+          <Card key={card.uuid} card={card} setTarget={setTarget} />
         ))}
       </div>
     </div>

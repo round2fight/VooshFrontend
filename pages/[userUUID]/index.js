@@ -7,8 +7,18 @@ import Navbar from "@/components/NavBar";
 import Modal from "@/components/Modal";
 import CreateTaskModal from "@/components/CreateModal";
 import { SessionContext } from "@/components/SessionContext";
-import { useCreateTask, useGetTasks, useUpdateTask } from "@/hooks/task";
+import {
+  useCreateTask,
+  useDeleteTask,
+  useGetTasks,
+  useUpdateTask,
+} from "@/hooks/task";
 import { DndContext } from "@dnd-kit/core";
+import DeleteTaskModal from "@/components/DeleteTaskModal";
+import ViewTaskModal from "@/components/ViewTaskModal";
+import EditTaskModal from "@/components/EditTaskModal";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const initialCards = [
   {
@@ -77,16 +87,17 @@ const HomePage = () => {
   const updateCardStatus = async (cardUUID, newStatus) => {
     console.log("updateCardStatus", cardUUID, newStatus);
 
-    // updateTasks(
-    //   { status: newStatus },
-    //   cardUUID,
-    //   (response) => {
-    //     console.log("Create task", response);
-    //   },
-    //   (error) => {
-    //     console.log("Error fetching task:", error);
-    //   }
-    // );
+    updateTasks(
+      { status: newStatus },
+      cardUUID,
+      (response) => {
+        console.log("Update task", response);
+        router.reload();
+      },
+      (error) => {
+        console.log("Error fetching task:", error);
+      }
+    );
   };
 
   function handleAddTask(title, description, status) {
@@ -150,6 +161,54 @@ const HomePage = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
+  const [isOpenView, setIsOpenView] = useState(false);
+  const [isOpenEdit, setIsOpenEDit] = useState(false);
+
+  const { deleteTask } = useDeleteTask();
+  function handleDelete(taskUUID) {
+    deleteTask(
+      taskUUID,
+      (response) => {
+        console.log("Delete task", response);
+        router.reload();
+      },
+      (error) => {
+        console.log("Error fetching task:", error);
+        // router.reload();
+      }
+    );
+  }
+
+  function handleEDit(taskUUID, title, description, status) {
+    updateTasks(
+      { title: title, description: description, status: status },
+      taskUUID,
+      (response) => {
+        console.log("Update task", response);
+        router.reload();
+      },
+      (error) => {
+        console.log("Error fetching task:", error);
+        // router.reload();
+      }
+    );
+  }
+  const [target, setTarget] = useState(null);
+  const [action, setAction] = useState(null);
+
+  useEffect(() => {
+    if (!!action && !!target) {
+      if (action === "delete") {
+        setIsOpenDelete(true);
+      } else if (action === "view") {
+        setIsOpenView(true);
+      } else if (action === "edit") {
+        setIsOpenEDit(true);
+      }
+    }
+  }, [target, action]);
+
   return (
     <div>
       <div className="flex justify-start px-3 py-6">
@@ -161,6 +220,7 @@ const HomePage = () => {
           onSubmit={(e) => {
             console.log(e);
             handleAddTask(e.title, e.description, e.status);
+            router.reload();
           }}
         ></CreateTaskModal>
         <button
@@ -172,12 +232,80 @@ const HomePage = () => {
           + Add Task
         </button>
       </div>
-
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 ">
-        <List id={0} cards={list1} moveCard={moveCard} title="TODO" />
-        <List id={1} cards={list2} moveCard={moveCard} title="IN PROGRESS" />
-        <List id={2} cards={list3} moveCard={moveCard} title="DONE" />
-      </div>
+      {!!target && !!action && action === "delete" && (
+        <DeleteTaskModal
+          task={target}
+          isOpen={isOpenDelete}
+          onClose={() => {
+            setIsOpenDelete(false);
+          }}
+          onSubmit={(e) => {
+            console.log("Call Delete Task");
+            setIsOpenDelete(false);
+            handleDelete(target.uuid);
+          }}
+        />
+      )}
+      {!!target && !!action && action === "view" && (
+        <ViewTaskModal
+          task={target}
+          isOpen={isOpenView}
+          onClose={() => {
+            setIsOpenView(false);
+          }}
+        />
+      )}
+      {!!target && !!action && action === "edit" && (
+        <EditTaskModal
+          title={target.title}
+          description={target.description}
+          status={target.status}
+          task={target}
+          isOpen={isOpenEdit}
+          onClose={() => {
+            setIsOpenEDit(false);
+          }}
+          onSubmit={(e) => {
+            console.log("Call Edit Task");
+            handleEDit(target.uuid, e.newTitle, e.newDescription, e.newStatus);
+            setIsOpenEDit(false);
+          }}
+        />
+      )}
+      {cards.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 ">
+          <List
+            id={0}
+            cards={list1}
+            moveCard={moveCard}
+            setTarget={(card, action) => {
+              setTarget(card);
+              setAction(action);
+            }}
+            title="TODO"
+          />
+          <List
+            id={1}
+            cards={list2}
+            moveCard={moveCard}
+            setTarget={(card, action) => {
+              setTarget(card);
+              setAction(action);
+            }}
+            title="IN PROGRESS"
+          />
+          <List
+            id={2}
+            cards={list3}
+            moveCard={moveCard}
+            setTarget={(card, action) => {
+              setTarget(card);
+              setAction(action);
+            }}
+            title="DONE"
+          />
+        </div>
+      )}
     </div>
   );
 };
