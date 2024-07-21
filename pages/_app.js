@@ -13,7 +13,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 export default function App({ Component, pageProps }) {
   return (
     <DndProvider backend={HTML5Backend}>
-      <GoogleOAuthProvider clientId="63255569484-18f8m3j8sfmrtei8mm6jlp6pt4tsq840.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId="91585630488-e503614jt9uqo1na275i7k9in6clofma.apps.googleusercontent.com">
         <SessionProvider>
           <Authify>
             <Component {...pageProps} />

@@ -13,13 +13,13 @@ const List = ({ id, cards, moveCard, title, setTarget }) => {
   }));
 
   return (
-    <div className="min-w-96 min-h-96 flex flex-col items-center">
-      <div className="w-full flex justify-center border-blue-500 p-2 m-1 bg-blue-500 rounded-lg text-white">
+    <div className="w-96 min-h-96 flex flex-col items-center">
+      <div className="w-full flex justify-center border-blue-500 p-2 m-1 bg-lapisLazuli rounded-lg text-white">
         {title}
       </div>
       <div
         ref={drop}
-        className="list w-full min-h-[400px] flex flex-col items-center gap-3 border border-gray-400 p-2 m-1 bg-gray-200 rounded-lg "
+        className="list w-full min-h-[400px] flex flex-col items-center gap-3 border border-gray-400 p-2 m-1 bg-lapisLazuli rounded-lg "
       >
         {cards.map((card) => (
           <Card key={card.uuid} card={card} setTarget={setTarget} />

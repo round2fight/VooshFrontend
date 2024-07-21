@@ -22,7 +22,8 @@ export default function SignIn() {
         router.push(response.data.uuid);
       },
       (error) => {
-        console.log("Error fetching task:", error);
+        console.log("Error fetching task:", error.response.data);
+        alert(error.response.data);
       }
     );
   };
@@ -38,6 +39,7 @@ export default function SignIn() {
       },
       (error) => {
         console.log("Error fetching task:", error);
+        alert(error.response.data);
       }
     );
     console.log(googleToken);
@@ -64,9 +66,9 @@ export default function SignIn() {
 
   return (
     <>
-      <div className="bg-gray-200 flex flex-col items-center justify-center min-h-screen">
+      <div className="bg-nyanza dark:bg-airForceBlue flex flex-col items-center justify-center min-h-screen">
         <div className="bg-white p-8 rounded-lg shadow-lg ">
-          <h2 className="text-2xl font-bold mb-6 text-center text-blue-500">
+          <h2 className="text-2xl font-bold mb-6 text-center text-lapisLazuli">
             Sign In
           </h2>
           <form
@@ -78,7 +80,7 @@ export default function SignIn() {
             <input
               type="email"
               id="email"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500 text-black"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-midnightGreen text-midnightGreen"
               placeholder="Email"
               required
               value={email}
@@ -88,7 +90,7 @@ export default function SignIn() {
             <input
               type="password"
               id="password"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500 text-black"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-midnightGreen text-midnightGreen"
               placeholder="Password"
               required
               value={password}
@@ -97,7 +99,7 @@ export default function SignIn() {
 
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+              className="w-full bg-lapisLazuli text-white py-2 rounded-lg hover:bg-midnightGreen focus:outline-none focus:bg-blue-600"
               onClick={() => {
                 handelSubmit();
               }}
@@ -106,23 +108,20 @@ export default function SignIn() {
             </button>
           </form>
           <button
-            className="mt-2 w-full bg-zinc-300 text-white py-2 rounded-lg hover:bg-zinc-400 focus:outline-none focus:bg-zinc-600"
+            className="mt-2 w-full bg-brightPinkCrayola text-white py-2 rounded-lg hover:bg-pink-700 focus:outline-none focus:bg-zinc-600"
             onClick={() => login()}
           >
             Sign In using Google
           </button>
-          <div className="flex justify-center mt-2">
-            Dont have an account?
-            <Link
-              href={`/sign-up`}
-              className="text-blue-800 hover:text-blue-400"
-            >
+          <div className="flex justify-center mt-2 text-lapisLazuli  ">
+            Dont have an account ?
+            <Link href={`/sign-up`} className="text-wine hover:text-blue-400">
+              {" "}
               Sign Up
             </Link>
           </div>
         </div>
       </div>
-      ;
     </>
   );
 }

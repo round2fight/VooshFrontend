@@ -103,7 +103,7 @@ export const useDeleteTask = () => {
     }
     try {
       const response = await axios.delete(
-        `${process.env.ANEXT_PUBLIC_API_URLPI_URL}/task/${taskUUID}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/task/${taskUUID}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

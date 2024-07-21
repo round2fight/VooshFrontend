@@ -30,6 +30,7 @@ export default function SignUp() {
       },
       (error) => {
         console.log("Error fetching task:", error);
+        alert(error.response.data);
       }
     );
   }
@@ -45,6 +46,7 @@ export default function SignUp() {
       },
       (error) => {
         console.log("Error fetching task:", error);
+        alert(error.response.data);
       }
     );
     console.log(accessToken);
@@ -70,9 +72,9 @@ export default function SignUp() {
   });
   return (
     <>
-      <div className="bg-gray-200 flex items-center justify-center min-h-screen">
+      <div className="bg-nyanza dark:bg-airForceBlue flex flex-col items-center justify-center min-h-screen">
         <div className="bg-white p-8 rounded-lg shadow-lg ">
-          <h2 className="text-2xl font-bold mb-6 text-center text-blue-500">
+          <h2 className="text-2xl font-bold mb-6 text-center text-lapisLazuli">
             Sign Up
           </h2>
           <form
@@ -84,7 +86,7 @@ export default function SignUp() {
             <input
               type="firstname"
               id="firstname"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500 text-black"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-midnightGreen text-midnightGreen"
               placeholder="First Name"
               required
               value={firstName}
@@ -93,7 +95,7 @@ export default function SignUp() {
             <input
               type="lastname"
               id="lastname"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500 text-black"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-midnightGreen text-midnightGreen"
               placeholder="Last Name"
               required
               value={lastName}
@@ -102,7 +104,7 @@ export default function SignUp() {
             <input
               type="email"
               id="email"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500 text-black"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-midnightGreen text-midnightGreen"
               placeholder="Email"
               required
               value={email}
@@ -112,7 +114,7 @@ export default function SignUp() {
             <input
               type="password"
               id="password"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500 text-black"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-midnightGreen text-midnightGreen"
               placeholder="Password"
               required
               value={password}
@@ -121,25 +123,22 @@ export default function SignUp() {
 
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+              className="w-full bg-lapisLazuli text-white py-2 rounded-lg hover:bg-midnightGreen focus:outline-none focus:bg-blue-600"
               onClick={() => {
                 handelSubmit();
               }}
             >
-              Sign Up
+              Sign Up using email
             </button>
             <button
-              className="w-full bg-zinc-300 text-white py-2 rounded-lg hover:bg-zinc-400 focus:outline-none focus:bg-zinc-600"
+              className="w-full bg-brightPinkCrayola text-white py-2 rounded-lg hover:bg-pink-700 focus:outline-none focus:bg-zinc-600"
               onClick={() => login()}
             >
-              Sign In using Google
+              Sign Up using Google
             </button>
-            <div className="flex justify-center mt-2">
+            <div className="flex justify-center mt-2 text-lapisLazuli  ">
               Already have an account?
-              <Link
-                href={`/sign-in`}
-                className="text-blue-800 hover:text-blue-400"
-              >
+              <Link href={`/sign-in`} className="text-wine hover:text-blue-400">
                 Sign In
               </Link>
             </div>

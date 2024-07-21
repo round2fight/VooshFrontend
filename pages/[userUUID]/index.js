@@ -17,38 +17,6 @@ import { DndContext } from "@dnd-kit/core";
 import DeleteTaskModal from "@/components/DeleteTaskModal";
 import ViewTaskModal from "@/components/ViewTaskModal";
 import EditTaskModal from "@/components/EditTaskModal";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-
-const initialCards = [
-  {
-    id: 1,
-    text: "Card 1",
-    title: "Do Dishes",
-    description: "The 2 plates",
-    createdAt: "12/10/2024",
-    status: 0,
-    uuid: "123213",
-  },
-  {
-    id: 2,
-    text: "Card 2",
-    title: "Do Sprinting",
-    description: "The 2 laps",
-    createdAt: "12/10/2024",
-    status: 0,
-    uuid: "12321asd3",
-  },
-  {
-    id: 3,
-    text: "Card 3",
-    title: "Do jumping",
-    description: "The 2 skips",
-    createdAt: "12/10/2024",
-    status: 1,
-    uuid: "1232efcsdc1asd3",
-  },
-];
 
 const HomePage = () => {
   const { user, isAuthenticated } = useContext(SessionContext);
@@ -92,7 +60,7 @@ const HomePage = () => {
       cardUUID,
       (response) => {
         console.log("Update task", response);
-        router.reload();
+        // router.reload();
       },
       (error) => {
         console.log("Error fetching task:", error);
@@ -115,18 +83,18 @@ const HomePage = () => {
   const moveCard = useCallback(
     (cardUUID, targetListId) => {
       const card = cards.find((card) => card.uuid === cardUUID);
-      const newStatus = targetListId; // Status corresponds to list ID
+      const newStatus = String(targetListId); // Status corresponds to list ID
 
       // Update the local state
       setList1((prev) => prev.filter((card) => card.uuid !== cardUUID));
       setList2((prev) => prev.filter((card) => card.uuid !== cardUUID));
       setList3((prev) => prev.filter((card) => card.uuid !== cardUUID));
 
-      if (newStatus === 0) {
+      if (newStatus === String(0)) {
         setList1((prev) => [...prev, { ...card, status: newStatus }]);
-      } else if (newStatus === 1) {
+      } else if (newStatus === String(1)) {
         setList2((prev) => [...prev, { ...card, status: newStatus }]);
-      } else if (newStatus === 2) {
+      } else if (newStatus === String(2)) {
         setList3((prev) => [...prev, { ...card, status: newStatus }]);
       }
 
@@ -174,7 +142,7 @@ const HomePage = () => {
         router.reload();
       },
       (error) => {
-        console.log("Error fetching task:", error);
+        console.log("Error fetching task:", error, taskUUID);
         // router.reload();
       }
     );
@@ -197,7 +165,7 @@ const HomePage = () => {
   const [target, setTarget] = useState(null);
   const [action, setAction] = useState(null);
 
-  useEffect(() => {
+  function handleTriggerAction(card, action) {
     if (!!action && !!target) {
       if (action === "delete") {
         setIsOpenDelete(true);
@@ -207,10 +175,10 @@ const HomePage = () => {
         setIsOpenEDit(true);
       }
     }
-  }, [target, action]);
+  }
 
   return (
-    <div>
+    <div className=" bg-nyanza h-screen w-full">
       <div className="flex justify-start px-3 py-6">
         <CreateTaskModal
           isOpen={isOpen}
@@ -227,7 +195,7 @@ const HomePage = () => {
           onClick={() => {
             setIsOpen(true);
           }}
-          className=" bg-green-700 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-green-900 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          className=" bg-midnightGreen text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-lapisLazuli focus:outline-none focus:ring-2 focus:ring-blue-300"
         >
           + Add Task
         </button>
@@ -281,6 +249,7 @@ const HomePage = () => {
             setTarget={(card, action) => {
               setTarget(card);
               setAction(action);
+              handleTriggerAction(card, action);
             }}
             title="TODO"
           />
@@ -291,6 +260,7 @@ const HomePage = () => {
             setTarget={(card, action) => {
               setTarget(card);
               setAction(action);
+              handleTriggerAction(card, action);
             }}
             title="IN PROGRESS"
           />
@@ -301,6 +271,7 @@ const HomePage = () => {
             setTarget={(card, action) => {
               setTarget(card);
               setAction(action);
+              handleTriggerAction(card, action);
             }}
             title="DONE"
           />

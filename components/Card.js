@@ -22,7 +22,7 @@ const Card = ({ card, setTarget }) => {
   return (
     <div
       ref={drag}
-      className="flex flex-col justify-center w-full rounded-xl overflow-hidden shadow-xl p-4 bg-gray-400"
+      className="flex flex-col justify-center w-full rounded-xl overflow-hidden shadow-xl p-4 bg-nyanza"
     >
       <div className="text-gray-700 font-bold text-lg ">{card.title}</div>
       <p className="text-gray-700 flex justify-start text-base">
@@ -36,17 +36,9 @@ const Card = ({ card, setTarget }) => {
           onClick={() => {
             setTarget(card, "delete");
           }}
-          className="bg-red-500 text-white font-bold py-2 px-4 rounded-full shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          className="bg-brightPinkCrayola text-white font-bold py-2 px-4 rounded-full shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
         >
           Delete
-        </button>
-        <button
-          onClick={() => {
-            setTarget(card, "view");
-          }}
-          className="bg-blue-500 text-white font-bold py-2 px-4 rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
-        >
-          View
         </button>
         <button
           onClick={() => {
@@ -55,6 +47,14 @@ const Card = ({ card, setTarget }) => {
           className="bg-gray-500 text-white font-bold py-2 px-4 rounded-full shadow-md hover:bg-zinc-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
         >
           Edit
+        </button>
+        <button
+          onClick={() => {
+            setTarget(card, "view");
+          }}
+          className="bg-blue-500 text-white font-bold py-2 px-4 rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
+        >
+          View
         </button>
       </div>
     </div>
