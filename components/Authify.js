@@ -28,12 +28,11 @@ const Authify = ({ children, userSetter }) => {
           }
         );
 
-        if (response.data.user.username === router.query.username) {
-          console.log("valid username url -> children");
+        if (response.data.user.uuid === router.query.userUUID) {
           setUser(response.data.user);
           setIsAuthenticated(true);
         } else {
-          console.log("invalid username url -> 404");
+          console.log("invalid userUUID url -> 404");
           router.push("/404");
         }
       } catch (error) {
@@ -43,7 +42,7 @@ const Authify = ({ children, userSetter }) => {
     }
 
     if (!isNonSessionPage(router)) {
-      if (!!router.query.username) {
+      if (!!router.query.userUUID) {
         verifyToken();
       }
     } else {

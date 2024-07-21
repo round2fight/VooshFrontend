@@ -1,5 +1,5 @@
 // pages/index.js
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import axios from "axios";
 import List from "@/components/List";
 import { useRouter } from "next/router";
@@ -7,6 +7,8 @@ import Navbar from "@/components/NavBar";
 import Modal from "@/components/Modal";
 import CreateTaskModal from "@/components/CreateModal";
 import { SessionContext } from "@/components/SessionContext";
+import { useCreateTask, useGetTasks, useUpdateTask } from "@/hooks/task";
+import { DndContext } from "@dnd-kit/core";
 
 const initialCards = [
   {
@@ -42,84 +44,83 @@ const HomePage = () => {
   const { user, isAuthenticated } = useContext(SessionContext);
   const router = useRouter();
 
-  const [list1, setList1] = useState(
-    initialCards.filter((card) => card.status === 0)
-  );
-  const [list2, setList2] = useState(
-    initialCards.filter((card) => card.status === 1)
-  );
-  const [list3, setList3] = useState(
-    initialCards.filter((card) => card.status === 2)
-  );
+  const [list1, setList1] = useState([]);
+  const [list2, setList2] = useState([]);
+  const [list3, setList3] = useState([]);
+  const { getTasks } = useGetTasks();
+  const { createTask } = useCreateTask();
+  const { updateTasks } = useUpdateTask();
 
   useEffect(() => {
-    async function getAllTasks() {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        router.push("/sign-in");
-        return;
-      }
-      try {
-        const response = await axios.get("http://localhost:3000/task", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        console.log("Get all tasks", response);
-      } catch (error) {
-        console.log(error);
-        router.push("/sign-in");
-      }
-    }
-
     if (isAuthenticated) {
-      getAllTasks();
+      getTasks(
+        (response) => {
+          console.log("Get all tasks", response);
+          console.log(initialCards, response.data);
+        },
+        (error) => {
+          console.log("Error fetching task:", error);
+        }
+      );
     }
   }, [isAuthenticated, router]);
 
+  useEffect(() => {
+    setList1(initialCards.filter((card) => card.status === 0));
+    setList2(initialCards.filter((card) => card.status === 1));
+    setList3(initialCards.filter((card) => card.status === 2));
+  }, [initialCards]);
+
   const updateCardStatus = async (cardUUID, newStatus) => {
-    async function UpdateTask(taskUUID, newStatus) {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        router.push("/sign-in");
-        return;
-      }
-      try {
-        const response = await axios.put(
-          `http://localhost:3000/task/${taskUUID}`,
-          { status: newStatus },
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        console.log("UpdateTask", response);
-      } catch (error) {
-        console.log(error);
-        router.push("/sign-in");
-      }
-    }
-
     console.log("updateCardStatus", cardUUID, newStatus);
+
+    // updateTasks(
+    //   { status: newStatus },
+    //   cardUUID,
+    //   (response) => {
+    //     console.log("Create task", response);
+    //   },
+    //   (error) => {
+    //     console.log("Error fetching task:", error);
+    //   }
+    // );
   };
 
-  const moveCard = (cardUUID, targetListId) => {
-    const card = initialCards.find((card) => card.uuid === cardUUID);
-    const newStatus = targetListId; // Status corresponds to list ID
+  function handleAddTask(title, description, status) {
+    createTask(
+      { title: title, description: description, status: status },
+      (response) => {
+        console.log("Create task", response);
+      },
+      (error) => {
+        console.log("Error fetching task:", error);
+      }
+    );
+  }
 
-    // Update the local state
-    setList1((prev) => prev.filter((card) => card.uuid !== cardUUID));
-    setList2((prev) => prev.filter((card) => card.uuid !== cardUUID));
-    setList3((prev) => prev.filter((card) => card.uuid !== cardUUID));
+  const moveCard = useCallback(
+    (cardUUID, targetListId) => {
+      const card = initialCards.find((card) => card.uuid === cardUUID);
+      const newStatus = targetListId; // Status corresponds to list ID
 
-    if (newStatus === 0) {
-      setList1((prev) => [...prev, { ...card, status: newStatus }]);
-    } else if (newStatus === 1) {
-      setList2((prev) => [...prev, { ...card, status: newStatus }]);
-    } else if (newStatus === 2) {
-      setList3((prev) => [...prev, { ...card, status: newStatus }]);
-    }
+      // Update the local state
+      setList1((prev) => prev.filter((card) => card.uuid !== cardUUID));
+      setList2((prev) => prev.filter((card) => card.uuid !== cardUUID));
+      setList3((prev) => prev.filter((card) => card.uuid !== cardUUID));
 
-    // Update the server
-    updateCardStatus(cardUUID, newStatus);
-  };
+      if (newStatus === 0) {
+        setList1((prev) => [...prev, { ...card, status: newStatus }]);
+      } else if (newStatus === 1) {
+        setList2((prev) => [...prev, { ...card, status: newStatus }]);
+      } else if (newStatus === 2) {
+        setList3((prev) => [...prev, { ...card, status: newStatus }]);
+      }
+
+      // Update the server
+      updateCardStatus(cardUUID, newStatus);
+    },
+    [initialCards]
+  );
 
   useEffect(() => {
     async function enums() {
@@ -153,6 +154,7 @@ const HomePage = () => {
           }}
           onSubmit={(e) => {
             console.log(e);
+            handleAddTask(e.title, e.description, e.status);
           }}
         ></CreateTaskModal>
         <button
@@ -164,6 +166,7 @@ const HomePage = () => {
           + Add Task
         </button>
       </div>
+
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3 ">
         <List id={0} cards={list1} moveCard={moveCard} title="TODO" />
         <List id={1} cards={list2} moveCard={moveCard} title="IN PROGRESS" />

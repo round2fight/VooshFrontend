@@ -19,18 +19,10 @@ const List = ({ id, cards, moveCard, title }) => {
       </div>
       <div
         ref={drop}
-        className="w-full min-h-[400px] flex flex-col items-center gap-3 border border-gray-400 p-2 m-1 bg-gray-200 rounded-lg "
+        className="list w-full min-h-[400px] flex flex-col items-center gap-3 border border-gray-400 p-2 m-1 bg-gray-200 rounded-lg "
       >
         {cards.map((card) => (
-          <Card
-            key={card.uuid}
-            uuid={card.uuid}
-            id={card.id}
-            text={card.text}
-            title={card.title}
-            description={card.description}
-            createdAt={card.createdAt}
-          />
+          <Card key={card.uuid} card={card} />
         ))}
       </div>
     </div>

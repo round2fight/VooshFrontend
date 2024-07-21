@@ -1,23 +1,52 @@
 import Navbar from "@/components/NavBar";
+import { useEmailSignUp, useGoogleSignUp } from "@/hooks/auth";
 import { useGoogleLogin } from "@react-oauth/google";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
 export default function SignUp() {
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
+  const [lastName, setLastName] = useState("");
+  const { gSignUp } = useGoogleSignUp();
+  const { eSignUp } = useEmailSignUp();
   const router = useRouter();
   // Google
   // 91585630488-fkae9eoktjtupihjav9crscs2c0lqg1c.apps.googleusercontent.com
   // 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
   function handelSubmit() {
-    console.log(email, password, name, username);
+    console.log(email, password, firstName, lastName);
+
+    eSignUp(
+      firstName,
+      lastName,
+      email,
+      password,
+      (response) => {
+        console.log("Email Sign up", response);
+        router.push(response.data.uuid);
+      },
+      (error) => {
+        console.log("Error fetching task:", error);
+      }
+    );
   }
 
   async function handleGoogleLogin(accessToken) {
     // We need to take the googleAccesToken and authenticate it in our backend.
+
+    gSignUp(
+      accessToken,
+      (response) => {
+        console.log("Google Sign up", response);
+        router.push(response.data.uuid);
+      },
+      (error) => {
+        console.log("Error fetching task:", error);
+      }
+    );
     console.log(accessToken);
   }
 
@@ -53,22 +82,22 @@ export default function SignUp() {
             }}
           >
             <input
-              type="name"
-              id="name"
+              type="firstname"
+              id="firstname"
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500 text-black"
-              placeholder="Name"
+              placeholder="First Name"
               required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
             />
             <input
-              type="username"
-              id="username"
+              type="lastname"
+              id="lastname"
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500 text-black"
-              placeholder="Username"
+              placeholder="Last Name"
               required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
             />
             <input
               type="email"
@@ -105,6 +134,15 @@ export default function SignUp() {
             >
               Sign In using Google
             </button>
+            <div className="flex justify-center mt-2">
+              Already have an account?
+              <Link
+                href={`/sign-in`}
+                className="text-blue-800 hover:text-blue-400"
+              >
+                Sign In
+              </Link>
+            </div>
           </form>
         </div>
       </div>

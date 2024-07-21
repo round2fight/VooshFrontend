@@ -5,27 +5,42 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 import { useGoogleLogin } from "@react-oauth/google";
+import { useEmailSignIn, useGoogleSignIn } from "@/hooks/auth";
 export default function SignIn() {
   const router = useRouter();
   const [email, setEmail] = useState("mycroft@angelina.com");
   const [password, setPassword] = useState("123123123");
+  const { gSignIn } = useGoogleSignIn();
+  const { eSignIn } = useEmailSignIn();
+
   const handelSubmit = async () => {
-    try {
-      const response = await axios.post(`http://localhost:3000/signin/email`, {
-        email: email,
-        password: password,
-      });
-      localStorage.setItem("token", response.data.token); // You can use cookies instead
-      console.log(response.data.token);
-      router.push(`/${response.data.username}`);
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
+    eSignIn(
+      email,
+      password,
+      (response) => {
+        console.log("Email Sign in", response);
+        router.push(response.data.uuid);
+      },
+      (error) => {
+        console.log("Error fetching task:", error);
+      }
+    );
   };
 
-  async function handleGoogleLogin(accessToken) {
+  async function handleGoogleLogin(googleToken) {
     // We need to take the googleAccesToken and authenticate it in our backend.
-    console.log(accessToken);
+
+    gSignIn(
+      googleToken,
+      (response) => {
+        console.log("Google Sign in", response);
+        router.push(response.data.uuid);
+      },
+      (error) => {
+        console.log("Error fetching task:", error);
+      }
+    );
+    console.log(googleToken);
   }
 
   const login = useGoogleLogin({
