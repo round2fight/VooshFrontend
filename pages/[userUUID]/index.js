@@ -69,13 +69,16 @@ const HomePage = () => {
   };
 
   function handleAddTask(title, description, status) {
+    console.log("handleAddTask", title, description, status);
     createTask(
       { title: title, description: description, status: status },
       (response) => {
         console.log("Create task", response);
+        router.reload();
       },
       (error) => {
         console.log("Error fetching task:", error);
+        router.reload();
       }
     );
   }
@@ -187,8 +190,7 @@ const HomePage = () => {
           }}
           onSubmit={(e) => {
             console.log(e);
-            handleAddTask(e.title, e.description, e.status);
-            router.reload();
+            handleAddTask(e.title, e.description, String(e.status));
           }}
         ></CreateTaskModal>
         <button
