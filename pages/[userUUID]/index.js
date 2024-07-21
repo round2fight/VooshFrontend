@@ -65,9 +65,11 @@ const HomePage = () => {
     }
   }, [isAuthenticated, router, getTasks]);
 
-  setList1(initialCards.filter((card) => card.status === 0));
-  setList2(initialCards.filter((card) => card.status === 1));
-  setList3(initialCards.filter((card) => card.status === 2));
+  useEffect(() => {
+    setList1(initialCards.filter((card) => card.status === 0));
+    setList2(initialCards.filter((card) => card.status === 1));
+    setList3(initialCards.filter((card) => card.status === 2));
+  }, []);
 
   const updateCardStatus = async (cardUUID, newStatus) => {
     console.log("updateCardStatus", cardUUID, newStatus);
