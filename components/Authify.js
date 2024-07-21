@@ -20,7 +20,7 @@ const Authify = ({ children, userSetter }) => {
       }
       try {
         let response = await axios.get(
-          "http://localhost:3000/api/auth/verify-token",
+          `${process.env.NEXT_PUBLIC_API_URL}/api/auth/verify-token`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

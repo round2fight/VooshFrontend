@@ -31,7 +31,7 @@ const Card = ({ card }) => {
       taskUUID,
       (response) => {
         console.log("Delete task", response);
-        // router.reload();
+        router.reload();
       },
       (error) => {
         console.log("Error fetching task:", error);
@@ -52,7 +52,7 @@ const Card = ({ card }) => {
       },
       (error) => {
         console.log("Error fetching task:", error);
-        router.reload();
+        // router.reload();
       }
     );
   }

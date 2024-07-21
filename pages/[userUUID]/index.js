@@ -133,9 +133,12 @@ const HomePage = () => {
         return;
       }
       try {
-        let response = await axios.get("http://localhost:3000/enums", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        let response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/enums`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         console.log(response);
       } catch (error) {
         console.log(error);

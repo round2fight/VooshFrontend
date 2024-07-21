@@ -5,9 +5,12 @@ export const useGoogleSignIn = () => {
 
   const gSignIn = async (googleToken, onSuccess, onError) => {
     try {
-      const response = await axios.post("http://localhost:3000/signin/google", {
-        googleToken: googleToken,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/signin/google`,
+        {
+          googleToken: googleToken,
+        }
+      );
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token); // Assuming the response contains a new token
         if (onSuccess) {
@@ -35,9 +38,12 @@ export const useGoogleSignUp = () => {
 
   const gSignUp = async (googleToken, onSuccess, onError) => {
     try {
-      const response = await axios.post("http://localhost:3000/signup/google", {
-        googleToken: googleToken,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/signup/google`,
+        {
+          googleToken: googleToken,
+        }
+      );
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token); // Assuming the response contains a new token
         if (onSuccess) {
@@ -65,10 +71,13 @@ export const useEmailSignIn = () => {
 
   const eSignIn = async (email, password, onSuccess, onError) => {
     try {
-      const response = await axios.post(`http://localhost:3000/signin/email`, {
-        email: email,
-        password: password,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/signin/email`,
+        {
+          email: email,
+          password: password,
+        }
+      );
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token); // Assuming the response contains a new token
         if (onSuccess) {
@@ -103,12 +112,15 @@ export const useEmailSignUp = () => {
     onError
   ) => {
     try {
-      const response = await axios.post(`http://localhost:3000/signup/email`, {
-        email: email,
-        password: password,
-        firstName: firstName,
-        lastName: lastName,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/signup/email`,
+        {
+          email: email,
+          password: password,
+          firstName: firstName,
+          lastName: lastName,
+        }
+      );
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token); // Assuming the response contains a new token
         if (onSuccess) {

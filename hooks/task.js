@@ -11,9 +11,12 @@ export const useGetTasks = () => {
       return;
     }
     try {
-      const response = await axios.get("http://localhost:3000/task", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/task`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       if (onSuccess) {
         onSuccess(response);
       }
@@ -39,7 +42,7 @@ export const useCreateTask = () => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:3000/task",
+        `${process.env.NEXT_PUBLIC_API_URL}/task`,
         taskData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -69,7 +72,7 @@ export const useUpdateTask = () => {
     }
     try {
       const response = await axios.put(
-        `http://localhost:3000/task/${taskUUID}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/task/${taskUUID}`,
         taskData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -100,7 +103,7 @@ export const useDeleteTask = () => {
     }
     try {
       const response = await axios.delete(
-        `http://localhost:3000/task/${taskUUID}`,
+        `${process.env.ANEXT_PUBLIC_API_URLPI_URL}/task/${taskUUID}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
