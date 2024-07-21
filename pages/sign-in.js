@@ -10,22 +10,26 @@ export default function SignIn() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { gSignIn } = useGoogleSignIn();
   const { eSignIn } = useEmailSignIn();
 
   const handelSubmit = async () => {
     if (email.trim() === "" || password.trim() === "") {
       alert("Fill in both fields please :)");
+      setIsLoading(false);
     } else {
       eSignIn(
         email,
         password,
         (response) => {
           console.log("Email Sign in", response);
+          setIsLoading(false);
           router.push(response.data.uuid);
         },
         (error) => {
           console.log("Error fetching task:", error.response.data);
+          setIsLoading(false);
           alert(error.response.data);
         }
       );
@@ -39,10 +43,12 @@ export default function SignIn() {
       googleToken,
       (response) => {
         console.log("Google Sign in", response);
+        setIsLoading(false);
         router.push(response.data.uuid);
       },
       (error) => {
         console.log("Error fetching task:", error);
+        setIsLoading(false);
         alert(error.response.data);
       }
     );
@@ -57,8 +63,10 @@ export default function SignIn() {
     },
     onError: (error) => {
       console.debug("Login Failed -> onError :", error);
+      setIsLoading(false);
     },
     onNonOAuthError: (error) => {
+      setIsLoading(false);
       console.debug("Login Failed -> onNonOauthError:", error);
       if (error.type == "popup_closed") {
         console.debug("Login Failed -> googleNonOauthPopupClosed:", error);
@@ -72,9 +80,15 @@ export default function SignIn() {
     <>
       <div className="bg-nyanza dark:bg-airForceBlue flex flex-col items-center justify-center min-h-screen">
         <div className="bg-white p-8 rounded-lg shadow-lg ">
+          {isLoading === true && (
+            <div className="flex justify-center">
+              <div className="inline-block w-8 h-8 border-4 border-t-4 border-t-blue-500 border-gray-200 rounded-full animate-spin"></div>
+            </div>
+          )}
           <h2 className="text-2xl font-bold mb-6 text-center text-lapisLazuli">
             Sign In
           </h2>
+
           <form
             className="flex flex-col gap-2"
             onSubmit={(e) => {
@@ -105,6 +119,7 @@ export default function SignIn() {
               type="submit"
               className="w-full bg-lapisLazuli text-white py-2 rounded-lg hover:bg-midnightGreen focus:outline-none focus:bg-blue-600"
               onClick={() => {
+                setIsLoading(true);
                 handelSubmit();
               }}
             >
@@ -113,7 +128,10 @@ export default function SignIn() {
           </form>
           <button
             className="mt-2 w-full bg-brightPinkCrayola text-white py-2 rounded-lg hover:bg-pink-700 focus:outline-none focus:bg-zinc-600"
-            onClick={() => login()}
+            onClick={() => {
+              setIsLoading(true);
+              login();
+            }}
           >
             Sign In using Google
           </button>

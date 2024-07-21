@@ -12,27 +12,39 @@ export default function SignUp() {
   const [lastName, setLastName] = useState("");
   const { gSignUp } = useGoogleSignUp();
   const { eSignUp } = useEmailSignUp();
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   // Google
   // 91585630488-fkae9eoktjtupihjav9crscs2c0lqg1c.apps.googleusercontent.com
   // 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
   function handelSubmit() {
     console.log(email, password, firstName, lastName);
-
-    eSignUp(
-      firstName,
-      lastName,
-      email,
-      password,
-      (response) => {
-        console.log("Email Sign up", response);
-        router.push(response.data.uuid);
-      },
-      (error) => {
-        console.log("Error fetching task:", error);
-        alert(error.response.data);
-      }
-    );
+    if (
+      email.trim() === "" ||
+      password.trim() === "" ||
+      firstName.trim() === "" ||
+      lastName.trim() === ""
+    ) {
+      alert("Fill in both fields please :)");
+      setIsLoading(false);
+    } else {
+      eSignUp(
+        firstName,
+        lastName,
+        email,
+        password,
+        (response) => {
+          console.log("Email Sign up", response);
+          setIsLoading(false);
+          router.push(response.data.uuid);
+        },
+        (error) => {
+          console.log("Error fetching task:", error);
+          setIsLoading(false);
+          alert(error.response.data);
+        }
+      );
+    }
   }
 
   async function handleGoogleLogin(accessToken) {
@@ -42,10 +54,12 @@ export default function SignUp() {
       accessToken,
       (response) => {
         console.log("Google Sign up", response);
+        setIsLoading(false);
         router.push(response.data.uuid);
       },
       (error) => {
         console.log("Error fetching task:", error);
+        setIsLoading(false);
         alert(error.response.data);
       }
     );
@@ -60,8 +74,10 @@ export default function SignUp() {
     },
     onError: (error) => {
       console.debug("Login Failed -> onError :", error);
+      setIsLoading(false);
     },
     onNonOAuthError: (error) => {
+      setIsLoading(false);
       console.debug("Login Failed -> onNonOauthError:", error);
       if (error.type == "popup_closed") {
         console.debug("Login Failed -> googleNonOauthPopupClosed:", error);
@@ -74,6 +90,11 @@ export default function SignUp() {
     <>
       <div className="bg-nyanza dark:bg-airForceBlue flex flex-col items-center justify-center min-h-screen">
         <div className="bg-white p-8 rounded-lg shadow-lg ">
+          {isLoading === true && (
+            <div className="flex justify-center">
+              <div className="inline-block w-8 h-8 border-4 border-t-4 border-t-blue-500 border-gray-200 rounded-full animate-spin"></div>
+            </div>
+          )}
           <h2 className="text-2xl font-bold mb-6 text-center text-lapisLazuli">
             Sign Up
           </h2>
@@ -125,6 +146,7 @@ export default function SignUp() {
               type="submit"
               className="w-full bg-lapisLazuli text-white py-2 rounded-lg hover:bg-midnightGreen focus:outline-none focus:bg-blue-600"
               onClick={() => {
+                setIsLoading(true);
                 handelSubmit();
               }}
             >
@@ -132,7 +154,10 @@ export default function SignUp() {
             </button>
             <button
               className="w-full bg-brightPinkCrayola text-white py-2 rounded-lg hover:bg-pink-700 focus:outline-none focus:bg-zinc-600"
-              onClick={() => login()}
+              onClick={() => {
+                setIsLoading(true);
+                login();
+              }}
             >
               Sign Up using Google
             </button>
