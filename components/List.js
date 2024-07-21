@@ -5,7 +5,7 @@ import Card from "./Card";
 
 const List = ({ id, cards, moveCard, title }) => {
   const [, drop] = useDrop(() => ({
-    accept: ItemTypes.CARD,
+    accept: "CARD",
     drop: (item) => {
       console.log(item);
       moveCard(item.uuid, id); // id corresponds to new status
