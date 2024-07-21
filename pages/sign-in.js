@@ -8,24 +8,28 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { useEmailSignIn, useGoogleSignIn } from "@/hooks/auth";
 export default function SignIn() {
   const router = useRouter();
-  const [email, setEmail] = useState("mycroft@angelina.com");
-  const [password, setPassword] = useState("123123123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const { gSignIn } = useGoogleSignIn();
   const { eSignIn } = useEmailSignIn();
 
   const handelSubmit = async () => {
-    eSignIn(
-      email,
-      password,
-      (response) => {
-        console.log("Email Sign in", response);
-        router.push(response.data.uuid);
-      },
-      (error) => {
-        console.log("Error fetching task:", error.response.data);
-        alert(error.response.data);
-      }
-    );
+    if (email.trim() === "" || password.trim() === "") {
+      alert("Fill in both fields please :)");
+    } else {
+      eSignIn(
+        email,
+        password,
+        (response) => {
+          console.log("Email Sign in", response);
+          router.push(response.data.uuid);
+        },
+        (error) => {
+          console.log("Error fetching task:", error.response.data);
+          alert(error.response.data);
+        }
+      );
+    }
   };
 
   async function handleGoogleLogin(googleToken) {

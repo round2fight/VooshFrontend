@@ -10,7 +10,7 @@ const Navbar = ({
   return (
     <nav className="bg-midnightGreen p-4 flex justify-between items-center">
       {/* Logo on the left */}
-      <div className="text-white text-lg font-bold">Assignment X Voosh</div>
+      <div className="text-white text-lg font-bold">Roshan X Voosh</div>
 
       {/* Sign-out or sign-up button on the right */}
       <div className="flex items-center space-x-4">
