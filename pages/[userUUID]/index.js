@@ -56,20 +56,18 @@ const HomePage = () => {
       getTasks(
         (response) => {
           console.log("Get all tasks", response);
-          console.log(initialCards, response.data);
+          console.log(response.data);
         },
         (error) => {
           console.log("Error fetching task:", error);
         }
       );
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, router, getTasks]);
 
-  useEffect(() => {
-    setList1(initialCards.filter((card) => card.status === 0));
-    setList2(initialCards.filter((card) => card.status === 1));
-    setList3(initialCards.filter((card) => card.status === 2));
-  }, [initialCards]);
+  setList1(initialCards.filter((card) => card.status === 0));
+  setList2(initialCards.filter((card) => card.status === 1));
+  setList3(initialCards.filter((card) => card.status === 2));
 
   const updateCardStatus = async (cardUUID, newStatus) => {
     console.log("updateCardStatus", cardUUID, newStatus);
@@ -98,29 +96,26 @@ const HomePage = () => {
     );
   }
 
-  const moveCard = useCallback(
-    (cardUUID, targetListId) => {
-      const card = initialCards.find((card) => card.uuid === cardUUID);
-      const newStatus = targetListId; // Status corresponds to list ID
+  const moveCard = useCallback((cardUUID, targetListId) => {
+    const card = initialCards.find((card) => card.uuid === cardUUID);
+    const newStatus = targetListId; // Status corresponds to list ID
 
-      // Update the local state
-      setList1((prev) => prev.filter((card) => card.uuid !== cardUUID));
-      setList2((prev) => prev.filter((card) => card.uuid !== cardUUID));
-      setList3((prev) => prev.filter((card) => card.uuid !== cardUUID));
+    // Update the local state
+    setList1((prev) => prev.filter((card) => card.uuid !== cardUUID));
+    setList2((prev) => prev.filter((card) => card.uuid !== cardUUID));
+    setList3((prev) => prev.filter((card) => card.uuid !== cardUUID));
 
-      if (newStatus === 0) {
-        setList1((prev) => [...prev, { ...card, status: newStatus }]);
-      } else if (newStatus === 1) {
-        setList2((prev) => [...prev, { ...card, status: newStatus }]);
-      } else if (newStatus === 2) {
-        setList3((prev) => [...prev, { ...card, status: newStatus }]);
-      }
+    if (newStatus === 0) {
+      setList1((prev) => [...prev, { ...card, status: newStatus }]);
+    } else if (newStatus === 1) {
+      setList2((prev) => [...prev, { ...card, status: newStatus }]);
+    } else if (newStatus === 2) {
+      setList3((prev) => [...prev, { ...card, status: newStatus }]);
+    }
 
-      // Update the server
-      updateCardStatus(cardUUID, newStatus);
-    },
-    [initialCards]
-  );
+    // Update the server
+    updateCardStatus(cardUUID, newStatus);
+  }, []);
 
   useEffect(() => {
     async function enums() {

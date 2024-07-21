@@ -3,7 +3,9 @@ import { SessionProvider } from "@/components/SessionContext";
 import "@/styles/globals.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useRouter } from "next/router";
-<script src="https://unpkg.com/@hello-pangea/dnd@x.x.x/dist/dnd.js"></script>;
+import Script from "next/script";
+
+<Script src="https://unpkg.com/@hello-pangea/dnd@x.x.x/dist/dnd.js"></Script>;
 
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";

@@ -11,9 +11,7 @@ const Authify = ({ children, userSetter }) => {
   const [isSignIn, setIsSignIn] = useState(true);
   const { user, setUser, isAuthenticated, setIsAuthenticated } =
     useContext(SessionContext);
-  useEffect(() => {
-    console.log(isAuthenticated, user);
-  }, [isAuthenticated, user]);
+
   useEffect(() => {
     async function verifyToken() {
       const token = localStorage.getItem("token");
@@ -53,7 +51,7 @@ const Authify = ({ children, userSetter }) => {
         setIsSignIn(false);
       }
     }
-  }, [router]);
+  }, [router, setIsAuthenticated, setUser]);
 
   return (
     <>
